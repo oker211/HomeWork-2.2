@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SettingsViewController.swift
 //  HomeWork 2.2
 //
 //  Created by Филипп Слабодецкий on 30.01.2021.
@@ -7,7 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+protocol BackgroundColorDeligate {
+    func backgroundColor(color: Color)
+}
+
+class SettingsViewController: UIViewController {
 
     // MARK:- IB Outlets
     
@@ -22,28 +26,40 @@ class ViewController: UIViewController {
     @IBOutlet weak var greenSlider: UISlider!
     
     // MARK:- Properties
-    
-    private var redColor = CGFloat.random(in: 0...1)
-    private var blueColor = CGFloat.random(in: 0...1)
-    private var greenColor = CGFloat.random(in: 0...1)
+    var deligate: BackgroundColorDeligate!
+    var viewColor: Color!
+   
+    private var redColor: CGFloat!
+    private var blueColor: CGFloat!
+    private var greenColor: CGFloat!
+    private var alpha: CGFloat!
     
     
     // MARK:- Override Methods
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
+        
+        redColor = viewColor.red
+        blueColor = viewColor.blue
+        greenColor = viewColor.green
+        alpha = viewColor.alpha
         
         valueSlider()
         valueSliderLabel()
         setValueSliderProperties()
        
         mainView.layer.cornerRadius = 20
-        view.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+
     }
     
     // MARK:- IB Action
     
+    @IBAction func sendBackgroundColorButton() {
+        let viewColor = Color(red: redColor, green: greenColor, blue: blueColor, alpha: alpha)
+        deligate.backgroundColor(color: viewColor)
+        
+    }
     @IBAction func redSliderAction() {
         redLabel.text = String(format: "%.2f",redSlider.value)
         redColor = CGFloat(redSlider.value)
@@ -61,6 +77,11 @@ class ViewController: UIViewController {
         greenColor = CGFloat(greenSlider.value)
         setValueSliderProperties()
     }
+    
+    // MARK: -  Methods
+    
+  
+  
     
     // MARK: - Private Methods
     
@@ -109,10 +130,8 @@ class ViewController: UIViewController {
         mainView.backgroundColor = UIColor.init(red: redColor,
                                                 green: greenColor,
                                                 blue: blueColor,
-                                                alpha: 1)
+                                                alpha: alpha)
         
     }
-    
-    
 }
 
